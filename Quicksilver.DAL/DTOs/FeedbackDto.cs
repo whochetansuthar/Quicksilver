@@ -11,5 +11,7 @@ namespace Quicksilver.DAL.DTOs
         public int OrderId { get; set; }
         public double Rating { get; set; }
         public string Review { get; set; }
+        public string UserName { get; set; }
+        public long UserMobileNo { get; set; }
     }
 }

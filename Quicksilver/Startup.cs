@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Quicksilver.DAL;
+using Quicksilver.DAL.QuicksilverDbContext;
 
 namespace Quicksilver
 {
@@ -27,6 +29,7 @@ namespace Quicksilver
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<QuicksilverContext>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -34,6 +37,8 @@ namespace Quicksilver
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddMvc().AddRazorRuntimeCompilation();
+            DbConnectionString.ConStr = Configuration.GetConnectionString("DefaultConnection");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

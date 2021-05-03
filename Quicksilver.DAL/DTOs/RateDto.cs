@@ -9,7 +9,8 @@ namespace Quicksilver.DAL.DTOs
         public int Id { get; set; }
         public int MinWeight { get; set; }
         public int MaxWeight { get; set; }
-        public int CourierId { get; set; }
-        public double Rate1 { get; set; }
+        public int CourierTypeId { get; set; }
+        public string CourierTypeName { get; set; }
+        public double Rate { get; set; }
     }
 }
