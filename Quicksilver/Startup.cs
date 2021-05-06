@@ -14,6 +14,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quicksilver.DAL;
 using Quicksilver.DAL.QuicksilverDbContext;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Quicksilver.DAL.Interfaces;
+using Quicksilver.DAL.Repositories;
+using Quicksilver.DAL.IdentityDbContext;
 
 namespace Quicksilver
 {
@@ -30,15 +34,21 @@ namespace Quicksilver
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<QuicksilverContext>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddMvc().AddRazorRuntimeCompilation();
+            services.AddMvc().AddRazorRuntimeCompilation().AddMvcOptions(x=>x.Filters.Add(new AuthorizeFilter()));
             DbConnectionString.ConStr = Configuration.GetConnectionString("DefaultConnection");
+
+            //DIs
+            services.AddScoped<IAgentRepository, AgentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

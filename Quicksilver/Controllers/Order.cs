@@ -19,7 +19,7 @@ namespace Quicksilver.Controllers
         [HttpGet]
         public IActionResult GetAllOrders()
         {
-            return View(orderRepository.GetAllOrders());
+            return Ok(orderRepository.GetAllOrders());
         }
     }
 }

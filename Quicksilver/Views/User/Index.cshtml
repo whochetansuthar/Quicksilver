@@ -1,5 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Orders";
+﻿@model IEnumerable<Quicksilver.DAL.DTOs.CourierTypeDto>
+@{
+    ViewData["Title"] = "Rates";
 }
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -12,7 +13,7 @@
                 <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
                         <h3 class="card-label">
-                            Orders
+                            Rates
                         </h3>
                     </div>
                     <div class="card-toolbar">
@@ -38,17 +39,12 @@
                     <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
                         <thead>
                             <tr>
-                                <th>Order Date</th>
-                                <th>User</th>
-                                <th>User Phone</th>
-                                <th>Agent</th>
-                                <th>Station</th>
-                                <th>Cargo</th>
-                                <th>Initial Cost</th>
-                                <th>Discount</th>
-                                <th>Final Cost</th>
-                                <th>Courier Type</th>
-                                <th>Coupon</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Total Orders</th>
+                                <th>Last Order</th>
+                                <th>Avg Rating Given</th>
                                 <th style="max-width:20%">Actions</th>
                             </tr>
                         </thead>
@@ -63,6 +59,49 @@
     <!--end::Entry-->
 </div>
 <!--end::Content-->
+<input type="hidden" id="RecordId" />
+<div class="modal fade-rght" id="RecordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+    <form id="RecordModalForm">
+        <div class="modal-dialog modal-right-dialog" role="document">
+            <div class="modal-content modal-right-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span id="RecordModalTitle">New</span> Record</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Min Weight: </label>
+                        <input type="number" id="MinWeight" required class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Max Weight: </label>
+                        <input type="number" id="MaxWeight" required class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label>Rate: </label>
+                        <input type="number" id="Rate" required class="form-control" />
+                    </div>
+                    <div class=" form-group">
+                        <label>Courier Type: </label>
+                        <select class="form-control" id="CourierTypeId">
+                            <option value="">Select Courier Type</option>
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 <style>
     .dataTables_filter {
         text-align: right;
@@ -92,43 +131,22 @@
     $(document).ready(function () {
         var options = {
             ajax: {
-                url: "order/GetAllOrders",
+                url: "rate/GetAllRates",
                 method: "GET",
                 dataSrc: ''
             },
             columns: [
                 {
-                    data: "orderDate"
+                    data: "courierTypeName"
                 },
                 {
-                    data: "userName"
+                    data: "minWeight"
                 },
                 {
-                    data: "userMobileNo"
+                    data: "maxWeight"
                 },
                 {
-                    data: "agentName"
-                },
-                {
-                    data: "stationName"
-                },
-                {
-                    data: "cargoName"
-                },
-                {
-                    data: "initialCost"
-                },
-                {
-                    data: "discount"
-                },
-                {
-                    data: "finalCost"
-                },
-                {
-                    data: "courierType"
-                },
-                {
-                    data: "couponCode"
+                    data: "rate"
                 },
                 {
                     render: function (data, type, row) {
@@ -140,6 +158,8 @@
             ],
         }
         var KtTable = $("#kt_datatable").DataTable(options);
+
+
 
         $("#NewRecord").click(function () {
             clearModalData();
@@ -160,7 +180,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "station/DeleteStation/" + btn.attr("record-id"),
+                        url: "rate/Deleterate/" + btn.attr("record-id"),
                         method: "DELETE",
                         success: function () {
                             console.log("success");
@@ -188,13 +208,15 @@
             clearModalData();
             var btn = $(this);
             $.ajax({
-                url: "station/GetStation/" + btn.attr("record-id"),
+                url: "rate/GetRate/" + btn.attr("record-id"),
                 type: "GET",
                 success: function (data) {
                     console.log(data);
-                    $("#StationName").val(data.name);
-                    $("#CityId").val(data.cityId);
+                    $("#MinWeight").val(data.minWeight);
                     $("#RecordId").val(data.id);
+                    $("#MaxWeight").val(data.maxWeight);
+                    $("#Rate").val(data.rate);
+                    $("#CourierTypeId").val(data.courierTypeId);
                     $("#RecordModalTitle").text("Edit");
                     $("#RecordModal").modal("show");
                 },
@@ -207,14 +229,16 @@
         $("#RecordModalForm").submit(function (e) {
             e.preventDefault();
             var RecordId = $("#RecordId").val();
-            var stationDto = Object();
-            stationDto.Name = $("#StationName").val();
-            stationDto.CityId = $("#CityId").val();
+            var rateDto = Object();
+            rateDto.MinWeight = $("#MinWeight").val();
+            rateDto.MaxWeight = $("#MaxWeight").val();
+            rateDto.Rate = $("#Rate").val();
+            rateDto.CourierTypeId = $("#CourierTypeId").val();
             if (RecordId == undefined || RecordId == null || RecordId <= 0) {
                 $.ajax({
-                    url: "station/CreateStation",
+                    url: "rate/CreateRate",
                     type: "POST",
-                    data: stationDto,
+                    data: rateDto,
                     success: function () {
                         Swal.fire(
                             'Saved!',
@@ -234,11 +258,11 @@
                     }
                 })
             } else {
-                stationDto.Id = parseInt(RecordId);
+                rateDto.Id = parseInt(RecordId);
                 $.ajax({
-                    url: "station/UpdateStation",
+                    url: "rate/UpdateRate",
                     type: "PUT",
-                    data: stationDto,
+                    data: rateDto,
                     success: function () {
                         Swal.fire(
                             'Updated!',
@@ -260,8 +284,10 @@
             }
         });
         function clearModalData() {
-            $("#StationName").val("");
-            $("#CityId").val("");
+            $("#MinWeight").val("");
+            $("#MaxWeight").val("");
+            $("#CourierTypeId").val("");
+            $("#Rate").val("");
             $("#RecordId").val(0);
         }
     })

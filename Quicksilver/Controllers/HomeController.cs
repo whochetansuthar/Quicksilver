@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace Quicksilver.Controllers
     [AllowAnonymous]
     public class HomeController : Controller
     {
+        private readonly SignInManager<IdentityUser> signInManager;
+        public HomeController(SignInManager<IdentityUser> signInManager)
+        {
+            this.signInManager = signInManager;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -25,6 +32,13 @@ namespace Quicksilver.Controllers
         public IActionResult Contact()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SignOut()
+        {
+            await signInManager.SignOutAsync();
+            return Ok();
         }
     }
 }

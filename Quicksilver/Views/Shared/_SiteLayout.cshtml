@@ -24,6 +24,16 @@
     <link rel="stylesheet" href="~/frontend/assets/css/style.css">
 </head>
 <body>
+    <style>
+        .btnSignOut {
+            color: #7b8693;
+            margin-left: 5px;
+        }
+        .btnSignOut:hover{
+            color:#ff5f13;
+            cursor:pointer;
+        }
+    </style>
     <!--? Preloader Start -->
     <div id="preloader-active">
         <div class="preloader d-flex align-items-center justify-content-center">
@@ -46,16 +56,25 @@
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="header-info-left">
                                     <ul>
-                                        <li>Phone: +99 (0) 101 0000 888</li>
-                                        <li>Email: noreply@yourdomain.com</li>
+                                        <li>Phone: +91 8561 957 277</li>
+                                        <li>Email: contact@quicksilver.com</li>
                                     </ul>
                                 </div>
                                 <div class="header-info-right">
                                     <ul class="header-social">
-                                        <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                        <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                        <li> <a href="#"><i class="fab fa-google-plus-g"></i></a></li>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <li style="color:#ff5f13">Welcome @User.Identity.Name</li>
+                                            @if (User.IsInRole("Admin")|| User.IsInRole("Agent"))
+                                            {
+                                                <li class="mr-2" style="color:white;"><a style="font-size: 15px" href="backend">Admin Panel</a></li>
+                                            }
+                                            <li class="btnSignOut">Signout</li>
+                                        }
+                                        else
+                                        {
+                                            <li class="ml-1" style="color:#ff5f13"><a href="Identity/Account/Login" style="outline:none;text-decoration:none">Sign In</a></li>
+                                        }
                                     </ul>
                                 </div>
                             </div>
@@ -86,7 +105,7 @@
                                     </div>
                                     <!-- Header-btn -->
                                     <div class="header-right-btn d-none d-lg-block ml-20">
-                                        <a href="contact.html" class="btn header-btn">Get A Quotue</a>
+                                        <a href="contact.html" class="btn header-btn">book courier</a>
                                     </div>
                                 </div>
                             </div>
@@ -243,5 +262,22 @@
     <!-- Jquery Plugins, main Jquery -->
     <script src="~/frontend/assets/js/plugins.js"></script>
     <script src="~/frontend/assets/js/main.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".btnSignOut").click(function () {
+                $.ajax({
+                    url: "/home/SignOut",
+                    type: "GET",
+                    success: function () {
+                        window.location.href="../../../../";
+                    },
+                    error: function () {
+                        toastr.error("Something went wrong!");
+                    }
+                });
+            })
+        })
+    </script>
 </body>
 </html>
