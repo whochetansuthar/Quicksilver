@@ -6,7 +6,6 @@
     <title>@ViewData["Title"] | Quicksilver</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="site.webmanifest">
     <link rel="shortcut icon" type="image/x-icon" href="~/frontend/assets/img/favicon.ico">
 
     <!-- CSS here -->
@@ -22,16 +21,37 @@
     <link rel="stylesheet" href="~/frontend/assets/css/slick.css">
     <link rel="stylesheet" href="~/frontend/assets/css/nice-select.css">
     <link rel="stylesheet" href="~/frontend/assets/css/style.css">
+
+    <link href="~/lib/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/easy-autocomplete.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/easy-autocomplete.themes.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 </head>
 <body>
     <style>
+        body {
+            font-family: Poppins, Helvetica, sans-serif !important;
+        }
+        .blockPage {
+            background-color: transparent !important;
+            border: none !important;
+        }
+        .footer-heading{
+            display:none !important;
+        }
         .btnSignOut {
             color: #7b8693;
             margin-left: 5px;
         }
-        .btnSignOut:hover{
-            color:#ff5f13;
-            cursor:pointer;
+
+            .btnSignOut:hover {
+                color: #ff5f13;
+                cursor: pointer;
+            }
+
+        html {
+            scroll-behavior: smooth;
         }
     </style>
     <!--? Preloader Start -->
@@ -65,9 +85,9 @@
                                         @if (User.Identity.IsAuthenticated)
                                         {
                                             <li style="color:#ff5f13">Welcome @User.Identity.Name</li>
-                                            @if (User.IsInRole("Admin")|| User.IsInRole("Agent"))
+                                            @if (User.IsInRole("Admin") || User.IsInRole("Agent"))
                                             {
-                                                <li class="mr-2" style="color:white;"><a style="font-size: 15px" href="backend">Admin Panel</a></li>
+                                                <li class="mr-2" style="color:white;"><a style="font-size: 15px" href="../backend">Admin Panel</a></li>
                                             }
                                             <li class="btnSignOut">Signout</li>
                                         }
@@ -87,7 +107,7 @@
                             <!-- Logo -->
                             <div class="col-xl-2 col-lg-2">
                                 <div class="logo">
-                                    <a href="index.html"><img src="~/frontend/assets/img/logo/logo.png" alt=""></a>
+                                    <a href="../../"><img src="~/frontend/assets/img/logo/logo.png" width="200px" alt=""></a>
                                 </div>
                             </div>
                             <div class="col-xl-10 col-lg-10">
@@ -97,15 +117,16 @@
                                         <nav>
                                             <ul id="navigation">
                                                 <li><a asp-action="Index" asp-controller="Home">Home</a></li>
-                                                <li><a asp-action="Services" asp-controller="Home">Services</a></li>
-                                                <li><a asp-action="About" asp-controller="Home">About</a></li>
+                                                @*<li><a asp-action="Services" asp-controller="Home">Services</a></li>*@
+                                                <li><a asp-action="MyOrders" asp-controller="Home">My Orders</a></li>
+                                                <li><a href="#AboutUs">About</a></li>
                                                 <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                             </ul>
                                         </nav>
                                     </div>
                                     <!-- Header-btn -->
                                     <div class="header-right-btn d-none d-lg-block ml-20">
-                                        <a href="contact.html" class="btn header-btn">book courier</a>
+                                        <a href="../home/bookcourier" class="btn header-btn">book courier</a>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +143,7 @@
     </header>
 
     @RenderBody()
-    
+
     <footer>
         <!--? Footer Start-->
         <div class="footer-area footer-bg">
@@ -169,20 +190,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                            <div class="single-footer-caption mb-50">
-                                <div class="footer-tittle">
-                                    <h4>RESOURCES</h4>
-                                    <ul>
-                                        <li><a href="#">Home Insurance</a></li>
-                                        <li><a href="#">Travel Insurance</a></li>
-                                        <li><a href="#"> Car Insurance</a></li>
-                                        <li><a href="#"> Business Insurance</a></li>
-                                        <li><a href="#"> Heal Insurance</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-xl-3 col-lg-4 col-md-5 col-sm-6">
                             <div class="single-footer-caption mb-50">
                                 <!-- logo -->
@@ -191,13 +198,14 @@
                                 </div>
                                 <div class="footer-tittle">
                                     <div class="footer-pera">
-                                        <p class="info1">GThe trade war currently ensuing between te US anfd several natxions around thdhe globe, most fiercely with.</p>
+                                        <p class="info1">
+                                            Quicksilver is committed to safeguarding the confidentiality, integrity and availability of all physical and electronic information assets of the organization. </p>
                                     </div>
                                 </div>
                                 <!-- Footer Social -->
                                 <div class="footer-social ">
-                                    <a href="https://www.facebook.com/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                    <a href="#"><i class="fab fa-twitter"></i></a>
                                     <a href="#"><i class="fas fa-globe"></i></a>
                                     <a href="#"><i class="fab fa-instagram"></i></a>
                                 </div>
@@ -213,7 +221,7 @@
                                 <p>
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                     Copyright &copy;
-                                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                    <script>document.write(new Date().getFullYear());</script> Quicksilverpost All rights reserved @*| Made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://torqueio.ml" target="_blank">Chetan</a>*@
                                     <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 </p>
                             </div>
@@ -229,7 +237,6 @@
     <div id="back-top">
         <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
     </div>
-
     <!-- JS here -->
 
     <script src="~/frontend/assets/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -252,25 +259,25 @@
     <script src="~/frontend/assets/js/jquery.nice-select.min.js"></script>
     <script src="~/frontend/assets/js/jquery.sticky.js"></script>
 
-    <!-- contact js -->
-    <script src=".~/frontend/assets/js/contact.js"></script>
-    <script src="~/frontend/assets/js/jquery.form.js"></script>
-    <script src="~/frontend/assets/js/jquery.validate.min.js"></script>
-    <script src="~/frontend/assets/js/mail-script.js"></script>
-    <script src="~/frontend/assets/js/jquery.ajaxchimp.min.js"></script>
-
+    
     <!-- Jquery Plugins, main Jquery -->
     <script src="~/frontend/assets/js/plugins.js"></script>
     <script src="~/frontend/assets/js/main.js"></script>
 
+    <script src="~/lib/assets/plugins/global/plugins.bundle.js"></script>
+    <script src="~/lib/assets/js/pages/features/miscellaneous/toastr.js"></script>
+    <script src="~/js/jquery.easy-autocomplete.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js" integrity="sha512-QSb5le+VXUEVEQbfljCv8vPnfSbVoBF/iE+c6MqDDqvmzqnr4KL04qdQMCm0fJvC3gCWMpoYhmvKBFqm1Z4c9A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    @RenderSection("scripts", false);
     <script>
+
         $(document).ready(function () {
             $(".btnSignOut").click(function () {
                 $.ajax({
                     url: "/home/SignOut",
                     type: "GET",
                     success: function () {
-                        window.location.href="../../../../";
+                        window.location.href = "../../../../";
                     },
                     error: function () {
                         toastr.error("Something went wrong!");

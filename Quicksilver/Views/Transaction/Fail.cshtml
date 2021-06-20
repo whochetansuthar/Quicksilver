@@ -1,0 +1,103 @@
+﻿@{ 
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Failed Transaction</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+    <style>
+        body {
+            font-family: Poppins, Helvetica, "sans-serif";
+        }
+
+        button:hover {
+            color: white;
+            background: #f44a40;
+        }
+
+        button {
+            color: #f44a40;
+            border: 1px solid #f44a40;
+            background: #fff;
+            margin: 5px;
+            border-radius: 0px;
+            display: inline-block;
+            outline: none;
+            line-height: 40px;
+            padding: 0 30px;
+            font-size: .8em;
+            text-align: center;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            -webkit-transition: all 0.3s ease 0s;
+            -moz-transition: all 0.3s ease 0s;
+            -o-transition: all 0.3s ease 0s;
+            transition: all 0.3s ease 0s;
+        }
+
+        .btnHome {
+            color: #38a4ff;
+            border: 1px solid #38a4ff;
+            background: #fff;
+        }
+
+            .btnHome:hover {
+                color: white;
+                border: 1px solid #38a4ff;
+                background: #38a4ff;
+            }
+
+        .btnOrderMore {
+            color: #1f2b7b;
+            border: 1px solid #1f2b7b;
+            background: #fff;
+        }
+
+            .btnOrderMore:hover {
+                color: white;
+                border: 1px solid #1f2b7b;
+                background: #1f2b7b;
+            }
+
+        .btnMyOrders {
+            color: #616161;
+            border: 1px solid #616161;
+            background: #fff;
+        }
+
+            .btnMyOrders:hover {
+                color: white;
+                border: 1px solid #616161;
+                background: #616161;
+            }
+
+        h4 {
+            font-weight: 500;
+            font-size: 30px;
+            color: #7E8299 !important;
+        }
+
+        h6 {
+            font-weight: 300;
+            font-size: 15px;
+            color: #7E8299 !important;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h4>Transaction Failed</h4>
+        <h6>Something went wrong with the order, Please click try again or Cancel to go back home.</h6>
+        <button onclick="window.location.href='../../'" class="btnOrderMore">Cancel</button>
+        <form action="../../transaction/tryagain?tid=@ViewBag.TrackingId" method="post">
+            <button type="submit" class="btnOrderMore">Try Again</button>
+        </form>
+    </center>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.js" integrity="sha512-QSb5le+VXUEVEQbfljCv8vPnfSbVoBF/iE+c6MqDDqvmzqnr4KL04qdQMCm0fJvC3gCWMpoYhmvKBFqm1Z4c9A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+</script>
+</body>
+</html>

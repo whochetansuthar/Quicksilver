@@ -14,5 +14,10 @@ namespace Quicksilver.BAL.Operations
         {
             return feedbackRepository.GetAllFeedback();
         }
+
+        public void PostRating(FeedbackDto feedbackDto)
+        {
+            feedbackRepository.AddFeedback(feedbackDto);
+        }
     }
 }

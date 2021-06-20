@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Quicksilver.DAL.Interfaces;
 using Quicksilver.DAL.Repositories;
 using Quicksilver.DAL.IdentityDbContext;
+using Quicksilver.BAL.Operations;
 
 namespace Quicksilver
 {
@@ -49,6 +50,9 @@ namespace Quicksilver
 
             //DIs
             services.AddScoped<IAgentRepository, AgentRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserOperations, UserOperations>();
+            services.AddScoped<IAgentsOperations, AgentOperations>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

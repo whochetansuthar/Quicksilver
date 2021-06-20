@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -10,9 +11,11 @@ namespace Quicksilver.DAL.QuicksilverDbContext
 {
     public partial class QuicksilverContext : DbContext
     {
-        public QuicksilverContext(DbContextOptions<QuicksilverContext> options)
+        private readonly IConfiguration _configuration;
+        public QuicksilverContext(DbContextOptions<QuicksilverContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
         }
         public virtual DbSet<Cargoes> Cargoes { get; set; }
         public virtual DbSet<Cities> Cities { get; set; }
@@ -31,7 +34,7 @@ namespace Quicksilver.DAL.QuicksilverDbContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=WINDOWSPC;Database=Quicksilver;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
             }
         }
 

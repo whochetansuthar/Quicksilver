@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Quicksilver.BAL.Operations;
 using Quicksilver.DAL.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Quicksilver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class CourierType : Controller
     {
 

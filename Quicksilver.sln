@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quicksilver", "Quicksilver\Quicksilver.csproj", "{24BF862A-4D8B-4F28-BE01-7AE206BD1AF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quicksilver", "Quicksilver\Quicksilver.csproj", "{24BF862A-4D8B-4F28-BE01-7AE206BD1AF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quicksilver.DAL", "Quicksilver.DAL\Quicksilver.DAL.csproj", "{F240DD86-4AE2-47BB-B429-5659711959BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quicksilver.DAL", "Quicksilver.DAL\Quicksilver.DAL.csproj", "{F240DD86-4AE2-47BB-B429-5659711959BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quicksilver.BAL", "Quicksilver.BAL\Quicksilver.BAL.csproj", "{8EA60CD5-0E3B-4B4A-BA4B-EA73EDF1807A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Quicksilver.BAL", "Quicksilver.BAL\Quicksilver.BAL.csproj", "{8EA60CD5-0E3B-4B4A-BA4B-EA73EDF1807A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

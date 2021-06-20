@@ -13,10 +13,28 @@ namespace Quicksilver.DAL.Repositories
     {
         private readonly IDbConnection db = new SqlConnection(DbConnectionString.ConStr);
 
-        public List<OrderDto> GetAllOrders()
+        public List<GetAllOrders> GetAllOrders(string email)
         {
             var procedure = "GetAllOrders";
-            return db.Query<OrderDto>(procedure,commandType:CommandType.StoredProcedure).ToList();
+            var values = new DynamicParameters();
+            values.Add("@UserName", email);
+            return db.Query<GetAllOrders>(procedure,values,commandType:CommandType.StoredProcedure).ToList();
+        }
+
+        public void DeleteOrders(int id)
+        {
+            var procedure = "DeleteOrder";
+            var values = new DynamicParameters();
+            values.Add("@Id",id);
+            db.Execute(procedure,values,commandType: CommandType.StoredProcedure);
+        }
+        public int UpdateStatus(int id,string type)
+        {
+            var procedure = "UpdateStatus";
+            var values = new DynamicParameters();
+            values.Add("@Id", id);
+            values.Add("@type", type);
+            return db.Query<int>(procedure, values,commandType: CommandType.StoredProcedure).SingleOrDefault();
         }
     }
 }

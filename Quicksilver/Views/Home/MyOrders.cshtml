@@ -1,0 +1,172 @@
+﻿@model List<Quicksilver.DAL.DTOs.OrderDetails>
+@{
+    ViewData["Title"] = "My Orders";
+    Layout = "_SiteLayout";
+}
+<style>
+    .modal-content {
+        border-radius: 0px !important;
+    }
+
+    .modal-footer {
+        padding: 0.5rem;
+    }
+
+    .card {
+        padding: 30px;
+        margin: 10px 20px;
+        font-family: Poppins, Helvetica, sans-serif !important;
+        max-width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h6 {
+        font-weight: 600 !important;
+        font-size: 19px !important;
+        padding: 5px;
+    }
+
+    span {
+        font-weight: 400;
+    }
+
+    .your-orders {
+        font-size: 40px;
+        font-weight: 600;
+        margin: 50px 0px;
+    }
+
+    .card button {
+        margin: 5px;
+        margin-top: 20px;
+    }
+
+    .txt-no-order {
+        margin-bottom: 10px;
+        font-weight: 500 !important;
+        font-size: 23px !important;
+        letter-spacing: 1px;
+    }
+</style>
+<main>
+    <div class="container-fluid" style="padding:15px 30px">
+        <h4 class="text-center your-orders">Your Orders</h4>
+        @if (Model.Count() == 0)
+        {
+            <center>
+                <h6 class="txt-no-order">No Orders</h6>
+                <button class="genric-btn primary mb-5" onclick="window.location.href = '/home/bookcourier'">Book Courier</button>
+            </center>
+        }
+        else
+        {
+            @foreach (var order in Model)
+            {
+    <div class="card">
+        <div class="row">
+            <div class="col-lg-8 col-md-12">
+                <h6>Tracking Id: <span>@order.TrackingId</span></h6>
+                <h6>Order Date: <span>@order.OrderDate.ToShortDateString()</span></h6>
+                <h6>Recipient Address: <span>@order.recipientAddress</span></h6>
+                <h6>Your Address: <span>@order.SenderAddress</span></h6>
+                <button class="btn btn-success" onclick="window.location.href = '/transaction/getinvoice?tid=@order.TrackingId'">Download Reciept</button>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <h6>Current Status: <span>@order.Status</span></h6>
+                <h6>Exp Delivery Date: <span>@order.ExpDeliveryDate.ToShortDateString()</span></h6>
+                <h6>Discount: <span>@order.Discount%</span></h6>
+                <h6>Grand Total: <span>@order.FinalCost</span></h6>
+                @if (!order.IsRatingGiven)
+                {
+                    <button class="btn btn-success btnWriteReview" order-tracking-id="@order.TrackingId">Write Review</button>
+                }
+            </div>
+        </div>
+    </div>
+            }
+        }
+    </div>
+
+    <div id="ModalWriteReview" class="modal" tabindex="-1" role="dialog" backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Write Feedback</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formFeedback">
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="form-group">
+                                <label>Tracking Id</label>
+                                <input class="form-control" disabled id="wfTID" value="13313131" />
+                            </div>
+                            <div class="form-group">
+                                <label>Rating</label>
+                                <div class="feedback-rating"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Feedback</label>
+                                <textarea class="form-control" id="feedbackReview" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="genric-btn info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="genric-btn primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+@section scripts{
+    <script src="~/js/site.js"></script>
+    <script>
+        var selectTID = null;
+        $(document).ready(function () {
+            $(".btnWriteReview").click(function () {
+                selectTID = $(this).attr("order-tracking-id");
+
+                $("#wfTID").val(selectTID);
+                $("#ModalWriteReview").modal("show");
+            });
+
+            $("#formFeedback").submit(function (e) {
+                e.preventDefault();
+                var feedbackDto = new Object();
+                feedbackDto.TrackingId = selectTID;
+                feedbackDto.Rating = $('.feedback-rating').starRating('getRating');
+                feedbackDto.Review = $("#feedbackReview").val();
+                $.ajax({
+                    url: "../feedback/PostRating",
+                    type: "POST",
+                    data: feedbackDto,
+                    success: function () {
+                        window.location.reload();
+                    },
+                    error: function (err) {
+                        console.log(err.responseText);
+                        alert("something went wrong");
+                    }
+                })
+            })
+        });
+        $(".feedback-rating").starRating({
+            totalStars: 5,
+            emptyColor: 'lightgray',
+            hoverColor: '#ff5f13',
+            activeColor: '#ff5f13',
+            initialRating: 0,
+            strokeWidth: 0,
+            useGradient: false,
+            minRating: 1
+        });
+
+    </script>
+
+
+}

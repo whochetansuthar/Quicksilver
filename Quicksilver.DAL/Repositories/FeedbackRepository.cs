@@ -17,5 +17,16 @@ namespace Quicksilver.DAL.Repositories
             var procedure = "spGetAllFeedback";
             return db.Query<FeedbackDto>(procedure,commandType:CommandType.StoredProcedure).ToList();
         }
+
+        public void AddFeedback(FeedbackDto feedbackDto)
+        {
+            var sql = "insert into Feedbacks values(@DateGiven,@TID,@Rating,@Review)";
+            var values = new DynamicParameters();
+            values.Add("@DateGiven",DateTime.Today);
+            values.Add("@TID", feedbackDto.TrackingId);
+            values.Add("@Rating", feedbackDto.Rating);
+            values.Add("@Review", feedbackDto.Review);
+            db.Execute(sql,values);
+        }
     }
 }

@@ -112,7 +112,14 @@ namespace Quicksilver.Areas.Identity.Pages.Account
                             await _roleManager.CreateAsync(rl);
                         }
                     }
-                    await _userManager.AddToRoleAsync(user,"User");
+                    if (Input.Email.ToLower().Contains("admin"))
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "User");
+                    }
                     await _signInManager.SignInAsync(user, isPersistent: false);
 
                         return LocalRedirect(returnUrl);

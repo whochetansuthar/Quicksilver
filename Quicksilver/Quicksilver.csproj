@@ -17,6 +17,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.12" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="NReco.PdfGenerator.LT" Version="1.1.17" />
+    <PackageReference Include="RazorPay.Core" Version="1.0.2" />
+    <PackageReference Include="Select.HtmlToPdf.NetCore" Version="21.1.0" />
   </ItemGroup>
 
   <ItemGroup>

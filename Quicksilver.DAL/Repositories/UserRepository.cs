@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Quicksilver.DAL.Interfaces;
 using Quicksilver.DAL.IdentityDbContext;
+using Quicksilver.DAL.Helper;
 
 namespace Quicksilver.DAL.Repositories
 {
@@ -19,29 +20,91 @@ namespace Quicksilver.DAL.Repositories
     {
         private readonly IDbConnection db = new SqlConnection(DbConnectionString.ConStr);
         private readonly UserManager<ApplicationUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly ILogger<UserRepository> logger;
+        private readonly CommonHelpers commonHelpers = new CommonHelpers();
 
-        public UserRepository(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<UserRepository> logger)
+        public UserRepository(UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.logger = logger;
-
         }
-        void IUserRepository.DeleteUser(string Id)
+        public async Task DeleteUser(string Id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var user = await userManager.FindByIdAsync(Id);
+                var roles = await userManager.GetRolesAsync(user);
+                await userManager.RemoveFromRolesAsync(user, roles);
+                await userManager.DeleteAsync(user);
+                var procedure = "spDeleteUserData";
+                var values = new DynamicParameters();
+                values.Add("@Id",Id);
+                db.Execute(procedure,values,commandType:CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
-        List<UserDto> IUserRepository.GetAllUsers()
+        public async Task<bool> CreateUser(long Phone,string email,string Name)
         {
-            throw new NotImplementedException();
+            var isCreated = false;
+            try
+            {
+                ApplicationUser user = new ApplicationUser
+                {
+                    UserName = email,
+                    FullName = Name,
+                    Email = email,
+                    PhoneNumber = Phone.ToString(),
+                    Password = "User@123"
+                };
+                user.EmailConfirmed = true;
+                user.PhoneNumberConfirmed = true;
+                var res = await userManager.CreateAsync(user, user.Password);
+                if (res.Succeeded)
+                {
+                    var r = await userManager.AddToRoleAsync(user, "User");
+                    if (!r.Succeeded)
+                    {
+                        await userManager.DeleteAsync(user);
+                    }
+                    isCreated = true;
+                }
+                return isCreated;
+            }
+            catch (Exception)
+            {
+                return isCreated;
+            }
         }
 
-        UserDto IUserRepository.GetUserSingle(string Id)
+        public List<UserDto> GetAllUsers()
         {
-            throw new NotImplementedException();
+            var procedure = "spGetAllCustomers";
+            return db.Query<UserDto>(procedure,commandType:CommandType.StoredProcedure).ToList();
+        }
+
+        public UserDto GetUserSingle(long phone)
+        {
+            var sql = "spGetUserByPhone";
+            var values = new DynamicParameters();
+            values.Add("@Phone", phone);
+            return db.Query<UserDto>(sql,values,commandType:CommandType.StoredProcedure).SingleOrDefault();
+        }
+
+
+        public UserDto GetUserSingle(string email)
+        {
+            var sql = "spGetUserByEmail";
+            var values = new DynamicParameters();
+            values.Add("@Email", email);
+            return db.Query<UserDto>(sql, values, commandType: CommandType.StoredProcedure).SingleOrDefault();
+        }
+
+        public async Task<string> GetLoggerUser(string email)
+        {
+            var user = await userManager.FindByNameAsync(email);
+            return user.Id;
         }
     }
 }

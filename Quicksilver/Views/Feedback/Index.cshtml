@@ -39,7 +39,7 @@
                         <thead>
                             <tr>
                                 <th>Date Given</th>
-                                <th>Order Id</th>
+                                <th>Tracking Id</th>
                                 <th>Rating</th>
                                 <th>Review</th>
                                 <th>User Name</th>
@@ -122,10 +122,13 @@
             },
             columns: [
                 {
-                    data: "dateGiven"
+                    render: function (data, type, row) {
+                        var dt = new Date(row.dateGiven);
+                        return dt.toDateString();
+                    }
                 },
                 {
-                    data: "orderId"
+                    data: "trackingId"
                 },
                 {
                     data: "rating"

@@ -1,6 +1,5 @@
-﻿@model IEnumerable<Quicksilver.DAL.DTOs.CourierTypeDto>
-@{
-    ViewData["Title"] = "Rates";
+﻿@{
+    ViewData["Title"] = "User";
 }
 <!--begin::Content-->
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -13,25 +12,10 @@
                 <div class="card-header flex-wrap border-0 pt-6 pb-0">
                     <div class="card-title">
                         <h3 class="card-label">
-                            Rates
+                            Users
                         </h3>
                     </div>
                     <div class="card-toolbar">
-                        <!--begin::Button-->
-                        <a id="NewRecord" class="btn btn-primary font-weight-bolder">
-                            <span class="svg-icon svg-icon-md">
-                                <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="0" y="0" width="24" height="24" />
-                                        <circle fill="#000000" cx="9" cy="15" r="6" />
-                                        <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-                            </span>New Record
-                        </a>
-                        <!--end::Button-->
                     </div>
                 </div>
                 <div class="card-body">
@@ -87,10 +71,10 @@
                         <label>Courier Type: </label>
                         <select class="form-control" id="CourierTypeId">
                             <option value="">Select Courier Type</option>
-                            @foreach (var item in Model)
+                            @*@foreach (var item in Model)
                             {
                                 <option value="@item.Id">@item.Name</option>
-                            }
+                            }*@
                         </select>
                     </div>
                 </div>
@@ -131,27 +115,38 @@
     $(document).ready(function () {
         var options = {
             ajax: {
-                url: "rate/GetAllRates",
+                url: "user/GetAllUsers",
                 method: "GET",
                 dataSrc: ''
             },
             columns: [
                 {
-                    data: "courierTypeName"
+                    data: "name"
                 },
                 {
-                    data: "minWeight"
+                    data: "mobileNo"
                 },
                 {
-                    data: "maxWeight"
+                    data: "email"
                 },
                 {
-                    data: "rate"
+                    data: "totalOrders"
                 },
                 {
                     render: function (data, type, row) {
-                        var btns = "<a class='btn btn-sm btn-clean btn-icon btnEdit' record-id='" + row.id + "' title='Edit'><i class='la la-edit'></i></a>"
-                            + "<a class='btn btn-sm btn-clean btn-icon btnDelete' record-id='" + row.id + "' title='Delete'><i class='la la-trash'></i></a>";
+                        var dt = new Date(row.lastOrderDate);
+                        if (dt.getFullYear() == 1970) {
+                            return "N/A";
+                        }
+                        return dt.toLocaleDateString();
+                    }
+                },
+                {
+                    data: "avgGivenRating"
+                },
+                {
+                    render: function (data, type, row) {
+                        var btns = "<a class='btn btn-sm btn-clean btn-icon btnDelete' record-id='" + row.id + "' title='Delete'><i class='la la-trash'></i></a>";
                         return btns;
                     }
                 }
@@ -159,13 +154,6 @@
         }
         var KtTable = $("#kt_datatable").DataTable(options);
 
-
-
-        $("#NewRecord").click(function () {
-            clearModalData();
-            $("#RecordModalTitle").text("New");
-            $("#RecordModal").modal("show");
-        });
 
         $(document).on("click", ".btnDelete", function () {
             var btn = $(this);
@@ -180,7 +168,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "rate/Deleterate/" + btn.attr("record-id"),
+                        url: "user/DeleteUser?Id=" + btn.attr("record-id"),
                         method: "DELETE",
                         success: function () {
                             console.log("success");
@@ -204,85 +192,6 @@
             })
         })
 
-        $(document).on("click", ".btnEdit", function () {
-            clearModalData();
-            var btn = $(this);
-            $.ajax({
-                url: "rate/GetRate/" + btn.attr("record-id"),
-                type: "GET",
-                success: function (data) {
-                    console.log(data);
-                    $("#MinWeight").val(data.minWeight);
-                    $("#RecordId").val(data.id);
-                    $("#MaxWeight").val(data.maxWeight);
-                    $("#Rate").val(data.rate);
-                    $("#CourierTypeId").val(data.courierTypeId);
-                    $("#RecordModalTitle").text("Edit");
-                    $("#RecordModal").modal("show");
-                },
-                error: function () {
-                    toastr.error("Something went wrong");
-                }
-            })
-        })
-
-        $("#RecordModalForm").submit(function (e) {
-            e.preventDefault();
-            var RecordId = $("#RecordId").val();
-            var rateDto = Object();
-            rateDto.MinWeight = $("#MinWeight").val();
-            rateDto.MaxWeight = $("#MaxWeight").val();
-            rateDto.Rate = $("#Rate").val();
-            rateDto.CourierTypeId = $("#CourierTypeId").val();
-            if (RecordId == undefined || RecordId == null || RecordId <= 0) {
-                $.ajax({
-                    url: "rate/CreateRate",
-                    type: "POST",
-                    data: rateDto,
-                    success: function () {
-                        Swal.fire(
-                            'Saved!',
-                            'Record saved successfully!',
-                            'success'
-                        );
-                        KtTable.ajax.reload();
-                        clearModalData();
-                        $("#RecordModal").modal("hide");
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseText
-                        });
-                    }
-                })
-            } else {
-                rateDto.Id = parseInt(RecordId);
-                $.ajax({
-                    url: "rate/UpdateRate",
-                    type: "PUT",
-                    data: rateDto,
-                    success: function () {
-                        Swal.fire(
-                            'Updated!',
-                            'Record saved updated!',
-                            'success'
-                        );
-                        KtTable.ajax.reload();
-                        clearModalData();
-                        $("#RecordModal").modal("hide");
-                    },
-                    error: function (xhr,state,error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseText
-                        });
-                    }
-                });
-            }
-        });
         function clearModalData() {
             $("#MinWeight").val("");
             $("#MaxWeight").val("");

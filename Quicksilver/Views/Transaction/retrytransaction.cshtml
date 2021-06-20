@@ -1,0 +1,83 @@
+﻿@model Quicksilver.DAL.DTOs.CourierBookedMessageDto
+@using Newtonsoft.Json.Serialization
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Retry Transaction</title>
+</head>
+<body>
+    <form asp-action="SuccessOrder" asp-controller="Transaction" id="SuccessForm">
+        <input type="hidden" id="rzOrderId" name="rzOrderId" />
+        <input type="hidden" id="rzPaymentId" name="rzPaymentId" />
+        <input type="hidden" id="rzSignature" name="rzSignature" />
+        <input type="hidden" id="rzTrackingId" name="rzTrackingId" />
+        <input type="hidden" id="rzPaymentStatus" name="rzPaymentStatus" />
+        <input type="hidden" id="rzIsRetryPayment" value="0" name="rzIsRetryPayment" />
+        <input type="submit" id="btnSubmitSuccessForm" hidden />
+    </form>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script>
+        var object = JSON.parse(@Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+         function InitPayment(obj) {
+            var options = {
+                "key": "rzp_test_nC7llvnoGW9H5K",
+                "amount": obj.totalCost,
+                "currency": "INR",
+                "name": "Quicksilver",
+                "description": "Book Courier",
+                "image": "https://example.com/your_logo",
+                "order_id": obj.orderId,
+                "handler": function (response) {
+                    alert(response.razorpay_payment_id);
+                    alert(response.razorpay_order_id);
+                    alert(response.razorpay_signature);
+                    $("#rzOrderId").val(response.razorpay_order_id);
+                    $("#rzPaymentId").val(response.razorpay_payment_id);
+                    $("#rzSignature").val(response.razorpay_signature);
+                    $("#rzTrackingId").val(obj.trackingId);
+                    $("#rzIsRetryPayment").val("1");
+                    $("#rzPaymentStatus").val("success");
+                    $("#btnSubmitSuccessForm").click();
+                },
+                "prefill": {
+                    "name": obj.name,
+                    "email": obj.email,
+                    "contact": obj.phone
+                },
+                "notes": {
+                    "address": obj.address
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                //alert(response.error.code);
+                //alert(response.error.description);
+                //alert(response.error.source);
+                //alert(response.error.step);
+                //alert(response.error.reason);
+                //alert(response.error.metadata.order_id);
+                //alert(response.error.metadata.payment_id);
+                console.log(response.error);
+                $("#rzPaymentStatus").val("fail");
+                $("#btnSubmitSuccessForm").click();
+            });
+
+            rzp1.open();
+        }
+
+        $(document).ready(function () {
+            setTimeout(function () {
+                //InitPayment();
+            },1500);
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,601 @@
+﻿@model IEnumerable<Quicksilver.DAL.DTOs.CourierTypeDto>
+@{
+    ViewData["Title"] = "Place Order";
+}
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Entry-->
+    <div class="d-flex flex-column-fluid">
+        <!--begin::Container-->
+        <div class="container">
+            <form class="form" id="kt_form" autocomplete="sasasa">
+                <div class="card card-custom card-sticky" id="kt_page_sticky_card">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <h3 class="card-label">
+                                Place Order
+                                <i class="mr-2"></i>
+                                <small class="">-</small>
+                            </h3>
+                        </div>
+                        <div class="card-toolbar">
+                            <a href="../../backend" class="btn btn-light-primary font-weight-bolder mr-2">
+                                <i class="fas fa-arrow-left icon-sm"></i>
+                                Cancel
+                            </a>
+                            <div class="btn-group">
+                                <button type="submit" id="btnSubmitOrder" class="btn btn-primary font-weight-bolder">
+                                    <i class="fas fa-check icon-sm"></i>
+                                    Order
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!--begin::Form-->
+                        <div class="row">
+                            <div class="col-xl-2"></div>
+                            <div class="col-xl-8">
+                                <div class="my-5">
+                                    <h3 class=" text-dark font-weight-bold mb-10">Customer Info:</h3>
+                                    <div class="form-group row">
+                                        <label class="col-3">Contact Phone</label>
+                                        <div class="col-9">
+                                            <div class="input-group input-group-solid">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="la la-phone"></i></span>
+                                                </div>
+                                                <input type="tel" required class="form-control form-control-solid" id="cPhone" maxlength="10" placeholder="Phone" />
+                                            </div>
+                                            <span class="form-text text-muted">Enter the phone number to get customer details.</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Name</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="cName" placeholder="Name" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Email Address</label>
+                                        <div class="col-9">
+                                            <div class="input-group input-group-solid">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text"><i class="la la-at"></i></span>
+                                                </div>
+                                                <input type="text" required class="form-control form-control-solid" id="cEmail" placeholder="Email" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator separator-dashed my-10"></div>
+                                <div class="my-5">
+                                    <h3 class=" text-dark font-weight-bold mb-10">Recipient Address Details:</h3>
+                                    <div class="form-group row">
+                                        <label class="col-3">Country</label>
+                                        <div class="col-9">
+                                            <select disabled class="form-control form-control-solid">
+                                                <option value="IN">India</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Recipient Name</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="rName" placeholder="Recipient Name" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Recipient Mobile</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="tel" maxlength="10" id="rMobileNo" placeholder="Recipient Mobile" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Address Line 1</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="rAddress1" placeholder="Address 1" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">City</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="rCity" placeholder="City" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">State</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required disabled type="text" id="rState" placeholder="State" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Pin Code</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="number" id="rPIN" placeholder="PIN" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Station</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" type="text" required disabled id="rStation" placeholder="Station" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator separator-dashed my-10"></div>
+                                <div class="my-5">
+                                    <h3 class=" text-dark font-weight-bold mb-10">Sender Address Details:</h3>
+                                    <div class="form-group row">
+                                        <label class="col-3">Country</label>
+                                        <div class="col-9">
+                                            <select disabled class="form-control form-control-solid">
+                                                <option value="IN">India</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Address Line 1</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="sAddress1" placeholder="Address 1" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">City</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="text" id="sCity" placeholder="City" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">State</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" disabled required type="text" id="sState" placeholder="State" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-3">Pin Code</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" required type="number" id="sPIN" placeholder="PIN" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="separator separator-dashed my-10"></div>
+                                <div class="my-52">
+                                    <h3 class="text-dark font-weight-bold mb-10">Courier Details:</h3>
+                                    <div class="form-group row">
+                                        <label class="col-3">Delivery Type</label>
+                                        <div class="col-9">
+                                            <select class="form-control form-control-solid" id="CourierType">
+                                                <option value="">Select Delivery Type</option>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Weight</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" type="number" id="Weight" placeholder="Enter Weight" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Volume(in &#13220;)</label>
+                                        <div class="col-9">
+                                            <input class="form-control form-control-solid" type="number" id="Volume" placeholder="Volume" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-3">Coupon Code</label>
+                                        <div class="col-8">
+                                            <div class="row">
+                                                <input class="col-5 ml-4 form-control form-control-solid" type="text" id="Coupon" placeholder="Coupon" />
+                                                <button type="button" class="col-4 ml-5 btn btn-success" id="btnApplyCoupon">Apply Coupon</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="separator separator-dashed my-10"></div>
+                                <div class="my-52 text-center">
+                                    <button type="button" class="btn btn-success" id="btnCalcEst">
+                                        Calculate Estimate
+                                    </button>
+                                </div>
+
+                                <div id="EstimateDiv" style="display:none">
+                                    <div class="my-52 row justify-content-center mt-4">
+                                        <div class="col-5">
+                                            <h6>Initial Cost:</h6>
+                                            <h6>Tax (<span id="TaxRate"></span>%):</h6>
+                                            <h6>Discount (<span id="DiscountRate"></span>%):</h6>
+                                        </div>
+                                        <div class="col-5 text-right">
+                                            <h6>
+                                                &#8377;
+                                                <span id="InitialCost">80</span>
+                                            </h6>
+                                            <h6>
+                                                &#8377;+
+                                                <span id="Tax">20</span>
+                                            </h6>
+                                            <h6>
+                                                &#8377;-
+                                                <span id="Discount">90</span>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div class="separator my-10 ml-auto  mr-auto" style=" margin-top: 1px !important; margin-bottom: 1px !important;height:1px;background-color:#000;width:90%"></div>
+                                    <div class="my-52 row justify-content-center mt-4">
+                                        <div class="col-5">
+                                            <h6>Grand Total:</h6>
+                                        </div>
+                                        <div class="col-5 text-right">
+                                            <h6>
+                                                &#8377;
+                                                <span id="GrandTotal">80</span>
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!--end::Form-->
+        </div>
+    </div>
+</div>
+<div class="modal" id="SucessModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Courier Booked</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Courier has been booked and status been Tracking status to 'Picked Up'.
+                    <br />
+                    Invoice has been sent to registered email address.
+                    <br />
+                    Click the print button below to print the order reciept.
+                    <div class="text-center">
+                        <a target="_blank" id="scmPrint" href="" class="btn btn-info"><i class="las la-print"></i> Print</a>
+                    </div>
+                </p>
+                <table class="table">
+                    <tr>
+                        <th>
+                            Tracking Id:
+                        </th>
+                        <td id="scmTrackingId">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Total Cost:
+                        </th>
+                        <td id="scmTotalCost">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Expected Delivery Date:
+                        </th>
+                        <td id="scmEDDate">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dataTables_filter {
+        text-align: right;
+    }
+
+        .dataTables_filter label {
+            text-align: left;
+        }
+
+    #kt_datatable_paginate {
+        text-align: right;
+    }
+
+    .paging_simple_numbers {
+        float: right;
+    }
+</style>
+@section scripts
+{
+    <script src="~/lib/assets/js/pages/features/miscellaneous/blockui.js"></script>
+    <script>
+
+        $("#SucessModal").on("hide.bs.modal", function () {
+            window.location.reload();
+        });
+
+        var CouponDetails = undefined;
+        var isEstimateCalculated = false;
+        var sData = undefined;
+        var rData = undefined;
+        var Estimate = new Object();
+
+        $(document).ready(function () {
+
+            $("input").attr("autocomplete", "dadadda");
+
+            var ReciepentAddressOption = {
+
+                url: function (phrase) {
+                    return "../../agents/GetAllStationWithCityState";
+                },
+
+                getValue: function (element) {
+                    return element.city;
+                },
+                list: {
+                    onChooseEvent: function () {
+                        rData = $("#rCity").getSelectedItemData();
+                        $("#rState").val(rData.state);
+                        $("#rStation").val(rData.name);
+                    },
+                },
+                ajaxSettings: {
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        dataType: "json"
+                    }
+                }
+            }
+
+            var SenderAddressOption = {
+
+                url: function (phrase) {
+                    return "../../agents/GetAllStationWithCityState";
+                },
+
+                getValue: function (element) {
+                    return element.city;
+                },
+                list: {
+                    onChooseEvent: function () {
+                        sData = $("#sCity").getSelectedItemData();
+                        $("#sState").val(sData.state);
+                        $("#sStation").val(sData.name);
+                    },
+                },
+                ajaxSettings: {
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        dataType: "json"
+                    }
+                }
+            }
+            $("#rCity").easyAutocomplete(ReciepentAddressOption);
+            $("#sCity").easyAutocomplete(SenderAddressOption);
+
+            $("#rCity").attr("autocomplete", "hoadoadjaodaod");
+            $("#sCity").attr("autocomplete", "qssqssqojo");
+
+
+            $(document).on("submit", "#kt_form", function (e) {
+                e.preventDefault();
+                KTApp.blockPage({
+                    overlayColor: '#000000',
+                    state: 'success',
+                    message: 'Processing Transaction'
+                });
+
+                var transactionDto = new Object();
+                transactionDto.sStationId = sData.id;
+                transactionDto.rStationId = rData.id;
+                transactionDto.rAddress = $("#sAddress1").val() + ", " + sData.city + ", " + sData.state + ", Pin:" + $("#sPIN").val();
+                transactionDto.sAddress = $("#rAddress1").val() + ", " + rData.city + ", " + rData.state + ", Pin:" + $("#rPIN").val();
+                transactionDto.rPIN = $("#rPIN").val();
+                transactionDto.sPIN = $("#sPIN").val();
+                transactionDto.rMobileNo = $("#rMobileNo").val();
+                transactionDto.CourierType = $("#CourierType").val();
+                transactionDto.Weight = $("#Weight").val();
+                transactionDto.Volume = $("#Volume").val();
+                transactionDto.CouponCode = $("#Coupon").val();
+                transactionDto.Phone = $("#cPhone").val();
+                transactionDto.Name = $("#cName").val();
+                transactionDto.Email = $("#cEmail").val();
+                transactionDto.RecipientName = $("#rName").val();
+
+                $.ajax({
+                    url: "../../transaction/BookCourierByAgent",
+                    type: "POST",
+                    data: transactionDto,
+                    success: function (data) {
+                        KTApp.unblockPage();
+                        //alert('success');
+                        var dt = new Date(data.expectedDeliveryDate);
+                        $("#scmTrackingId").text(data.trackingId);
+                        $("#scmTotalCost").text(data.totalCost);
+                        $("#scmEDDate").text(dt.toLocaleDateString());
+                        $("#SucessModal").modal('show');
+                        $("#scmPrint").attr("href", "../../transaction/getinvoice?tid=" + data.trackingId);
+                    },
+                    error: function (err) {
+                        $("#SucessModal").modal('hide');
+                        KTApp.unblockPage();
+                        Swal.fire(
+                            'Oops!',
+                            err.responseText,
+                            'error'
+                        );
+                    }
+                });
+            })
+
+
+
+
+            $("#btnApplyCoupon").click(function () {
+
+                if ($(this).hasClass("btn-danger")) {
+                    $("#Coupon").val("");
+                    $(this).removeClass("btn-danger");
+                    $(this).addClass("btn-success");
+                    $(this).text("Apply Coupon");
+                    CouponDetails = undefined;
+                    $("#Coupon").prop("disabled", false);
+                    return false;
+                };
+
+                KTApp.blockPage({
+                    overlayColor: '#000000',
+                    state: 'danger',
+                    message: 'Applying Coupon'
+                });
+
+                $.ajax({
+                    url: "../../Transaction/applycoupon?code=" + $("#Coupon").val(),
+                    type: "POST",
+                    success: function (data) {
+                        Swal.fire(
+                            'Woohoo!',
+                            "Coupon Applied <br/>" + data.discount + "% Discount",
+                            'success'
+                        );
+                        $("#Coupon").prop("disabled", true);
+                        $("#btnApplyCoupon").removeClass("btn-success");
+                        $("#btnApplyCoupon").addClass("btn-danger");
+                        $("#btnApplyCoupon").text("Remove Coupon");
+                        CouponDetails = data.code;
+                        KTApp.unblockPage();
+                    },
+                    error: function (err) {
+                        KTApp.unblockPage();
+                        Swal.fire(
+                            'Oops!',
+                            err.responseText,
+                            'error'
+                        );
+                        $("#Coupon").val("");
+                    }
+                });
+            });
+
+
+            $("#btnCalcEst").click(function () {
+                $("#EstimateDiv").hide();
+                if (!$("#kt_form").is(":valid")) {
+                    Swal.fire(
+                        'Oops!',
+                        'Enter all the required details',
+                        'error'
+                    );
+                    return false;
+                }
+                KTApp.blockPage({
+                    overlayColor: '#000000',
+                    state: 'danger',
+                    message: 'Calculating'
+                });
+
+                Estimate.SenderStationId = sData.id;
+                Estimate.RecipientStationId = rData.id;
+                Estimate.SenderAddress = $("#sAddress1").val() + ", " + sData.city + ", " + sData.state + ", Pin:" + $("#sPIN").val();
+                Estimate.RecipientAddress = $("#rAddress1").val() + ", " + rData.city + ", " + rData.state + ", Pin:" + $("#rPIN").val();
+                Estimate.CourierType = $("#CourierType").val();
+                Estimate.Weight = $("#Weight").val();
+                Estimate.Volume = $("#Volume").val();
+                Estimate.CouponCode = $("#Coupon").val();
+
+                $.ajax({
+                    url: "../../transaction/CalculateEstimate",
+                    type: "POST",
+                    data: Estimate,
+                    success: function (data) {
+                        console.log(data);
+                        $("#InitialCost").text(data.intialCost.toFixed(2));
+                        $("#Tax").text(data.taxAmount.toFixed(2));
+                        $("#TaxRate").text(data.tax.toFixed(2));
+                        $("#DiscountRate").text(data.discount.toFixed(2));
+                        $("#GrandTotal").text(data.grandTotal.toFixed(2));
+                        $("#Discount").text(data.discountAmt.toFixed(2));
+                        $("#EstimateDiv").show();
+                        KTApp.unblockPage();
+                    },
+                    error: function (err) {
+                        KTApp.unblockPage();
+                        Swal.fire(
+                            'Oops!',
+                            err.responseText,
+                            'error'
+                        );
+                        Estimate = new Object();
+                    }
+                });
+            });
+
+            $("#cPhone").on("input", function () {
+                var value = $(this).val();
+                $(this).val(value.trim());
+                console.log(value);
+                if (value.length == 10) {
+                    KTApp.blockPage({
+                        overlayColor: '#000000',
+                        state: 'warning',
+                        message: 'Loading User'
+                    });
+                    $.ajax({
+                        url: "../../User/GetUserByPhone?phone=" + $("#cPhone").val(),
+                        type: "GET",
+                        success: function (data) {
+                            KTApp.unblockPage();
+                            if (data == "UNF") {
+                                Swal.fire(
+                                    'Oops!',
+                                    "User not found, Enter the Details to create User.",
+                                    'info'
+                                );
+                                $("#cName").val("");
+                                $("#cEmail").val("");
+                                $("#cName").prop("disabled", false);
+                                $("#cEmail").prop("disabled", false);
+                                return false;
+                            } else {
+                                $("#cName").prop("disabled", true);
+                                $("#cEmail").prop("disabled", true);
+                                $("#cName").val(data.name);
+                                $("#cEmail").val(data.email);
+                            }
+                        },
+                        error: function (err) {
+                            Swal.fire(
+                                'Oops!',
+                                err.responseText,
+                                'error'
+                            );
+                            KTApp.unblockPage();
+                        }
+                    });
+                }
+            })
+            //----------------
+        })
+    </script>
+}

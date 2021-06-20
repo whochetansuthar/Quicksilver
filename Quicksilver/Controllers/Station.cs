@@ -8,9 +8,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Quicksilver.DAL.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Quicksilver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class Station : Controller
     {
         StationOperations stationOperations = new StationOperations();

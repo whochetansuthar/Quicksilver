@@ -15,40 +15,24 @@
                             Orders
                         </h3>
                     </div>
-                    <div class="card-toolbar">
-                        <!--begin::Button-->
-                        <a id="NewRecord" class="btn btn-primary font-weight-bolder">
-                            <span class="svg-icon svg-icon-md">
-                                <!--begin::Svg Icon | path:assets/media/svg/icons/Design/Flatten.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="0" y="0" width="24" height="24" />
-                                        <circle fill="#000000" cx="9" cy="15" r="6" />
-                                        <path d="M8.8012943,7.00241953 C9.83837775,5.20768121 11.7781543,4 14,4 C17.3137085,4 20,6.6862915 20,10 C20,12.2218457 18.7923188,14.1616223 16.9975805,15.1987057 C16.9991904,15.1326658 17,15.0664274 17,15 C17,10.581722 13.418278,7 9,7 C8.93357256,7 8.86733422,7.00080962 8.8012943,7.00241953 Z" fill="#000000" opacity="0.3" />
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-                            </span>New Record
-                        </a>
-                        <!--end::Button-->
-                    </div>
                 </div>
                 <div class="card-body">
                     <!--begin: Datatable-->
-                    <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
+                    <table class="table table-bordered table-hover table-checkable table-responsive" id="kt_datatable" style="margin-top: 13px !important">
                         <thead>
                             <tr>
                                 <th>Order Date</th>
                                 <th>User</th>
-                                <th>User Phone</th>
                                 <th>Agent</th>
-                                <th>Station</th>
-                                <th>Cargo</th>
-                                <th>Initial Cost</th>
-                                <th>Discount</th>
-                                <th>Final Cost</th>
+                                <th>Receipent Address</th>
+                                <th>Sender Address</th>
                                 <th>Courier Type</th>
-                                <th>Coupon</th>
+                                <th>Tracking Id</th>
+                                <th>Status</th>
+                                <th>Distance</th>
+                                <th>Discount(%)</th>
+                                <th>Tax(%)</th>
+                                <th>Final Cost</th>
                                 <th style="max-width:20%">Actions</th>
                             </tr>
                         </thead>
@@ -79,14 +63,43 @@
     .paging_simple_numbers {
         float: right;
     }
+    .label-inline{
+        padding:18px !important;
+        font-weight:bolder !important;
+    }
 </style>
 @section scripts
 {
+<script src="~/lib/assets/js/pages/features/miscellaneous/toastr.js"></script>
     <script>
-        function getDateFormatted(date) {
-            var dt = date.split("-");
-            var dd = dt[2].split("T");
-            return dt[0] + "-" + dt[1] + "-" + dd[0];
+        var isAdmin = '@User.IsInRole("Admin")';
+
+
+        function getStatus(status) {
+            if (status == 1) {
+                return "<span class='label label-danger label-inline mr-2'>Booked</span>";
+            } else if (status == 2) {
+                return "<span class='label label-warning label-inline mr-2'>Picked Up</span>";
+            } else if (status == 3) {
+                return "<span class='label label-info label-inline mr-2'>In Transit</span>";
+            } else if (status == 4) {
+                return "<span class='label label-primary label-inline mr-2'>At Destination</span>";
+            } else if (status == 5) {
+                return "<span class='label label-success label-inline mr-2'>Delivered</span>";
+            }
+        }
+        function getStatusName(status) {
+            if (status == 1) {
+                return "Booked";
+            } else if (status == 2) {
+                return "Picked Up";
+            } else if (status == 3) {
+                return "In Transit";
+            } else if (status == 4) {
+                return "At Destination";
+            } else if (status == 5) {
+                return "Delivered";
+            }
         }
 
     $(document).ready(function () {
@@ -98,42 +111,71 @@
             },
             columns: [
                 {
-                    data: "orderDate"
+                    render: function (data, type, row) {
+                        var dt = new Date(row.orderDate);
+                        return dt.toLocaleDateString();
+                    }
+
                 },
                 {
-                    data: "userName"
+                    render: function (data, type, row) {
+                        return "<span title='Mo: " + row.uMobileNo + "'>" + row.uName+"</span>";
+                    }
                 },
                 {
-                    data: "userMobileNo"
+                    render: function (data, type, row) {
+                        if (row.aStation==null) {
+                            row.aStation="N/A"
+                        }
+                        if (row.aName==null) {
+                            return "<span title='Not Available'>N/A</span>";
+                        } else {
+                            return "<span title='Mo: " + row.aPhone + "(" + row.aStation + ")'>" + row.aName + "</span>";
+                        }
+                    }
                 },
                 {
-                    data: "agentName"
+                    data: "recipientAddress"
                 },
                 {
-                    data: "stationName"
-                },
-                {
-                    data: "cargoName"
-                },
-                {
-                    data: "initialCost"
-                },
-                {
-                    data: "discount"
-                },
-                {
-                    data: "finalCost"
+                    data: "senderAddress"
                 },
                 {
                     data: "courierType"
                 },
                 {
-                    data: "couponCode"
+                    data: "trackingId"
                 },
                 {
                     render: function (data, type, row) {
-                        var btns = "<a class='btn btn-sm btn-clean btn-icon btnEdit' record-id='" + row.id + "' title='Edit'><i class='la la-edit'></i></a>"
-                            + "<a class='btn btn-sm btn-clean btn-icon btnDelete' record-id='" + row.id + "' title='Delete'><i class='la la-trash'></i></a>";
+                        return getStatus(row.status);
+                    }
+                },
+                {
+                    data: "distance"
+                },
+                {
+                    data: "discount"
+                },
+                {
+                    data: "tax"
+                },
+                {
+                    data: "finalCost"
+                },
+                {
+                    render: function (data, type, row) {
+                        var btns="";
+                        if (row.status<5) {
+                            if (row.status > 1) {
+                                btns += "<a class='btn btn-sm btn-clean btn-icon btnStatusBack' title='Set to " + getStatusName(row.status-1) + "' record-id='" + row.id + "' title='Edit'><i class='la la-arrow-left'></i></a>";
+                            }
+                            btns += "<a class='btn btn-sm btn-clean btn-icon btnStatusAhead' title='Set to " + getStatusName(row.status+1) + "' record-id='" + row.id + "' title='Edit'><i class='la la-arrow-right'></i></a>";
+                            if (isAdmin=="True")
+                            {
+                                btns += "<a class='btn btn-sm btn-clean btn-icon btnDelete' title='Delete' record-id='" + row.id + "' title='Delete'><i class='la la-trash'></i></a>";
+                            }
+                        }
                         return btns;
                     }
                 }
@@ -145,6 +187,36 @@
             clearModalData();
             $("#RecordModalTitle").text("New");
             $("#RecordModal").modal("show");
+        });
+
+        $(document).on("click", ".btnStatusBack", function () {
+            var btn = $(this);
+            $.ajax({
+                url: "order/UpdateStatus?id=" + btn.attr("record-id") +"&type=b",
+                type: "GET",
+                success: function (data) {
+                    toastr.success("Updated to " + getStatusName(parseInt(data)));
+                    KtTable.ajax.reload();
+                },
+                error: function (err) {
+                    toastr.error("Error: " + err.responseText);
+                },
+            });
+        });
+
+        $(document).on("click", ".btnStatusAhead", function () {
+            var btn = $(this);
+            $.ajax({
+                url: "order/UpdateStatus?id=" + btn.attr("record-id") + "&type=f",
+                type: "GET",
+                success: function (data) {
+                    toastr.success("Updated to " + getStatusName(parseInt(data)));
+                    KtTable.ajax.reload();
+                },
+                error: function (err) {
+                    toastr.error("Error: " + err.responseText);
+                },
+            });
         });
 
         $(document).on("click", ".btnDelete", function () {
@@ -160,7 +232,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: "station/DeleteStation/" + btn.attr("record-id"),
+                        url: "order/DeleteOrders?id=" + btn.attr("record-id"),
                         method: "DELETE",
                         success: function () {
                             console.log("success");
@@ -183,87 +255,6 @@
                 }
             })
         })
-
-        $(document).on("click", ".btnEdit", function () {
-            clearModalData();
-            var btn = $(this);
-            $.ajax({
-                url: "station/GetStation/" + btn.attr("record-id"),
-                type: "GET",
-                success: function (data) {
-                    console.log(data);
-                    $("#StationName").val(data.name);
-                    $("#CityId").val(data.cityId);
-                    $("#RecordId").val(data.id);
-                    $("#RecordModalTitle").text("Edit");
-                    $("#RecordModal").modal("show");
-                },
-                error: function () {
-                    toastr.error("Something went wrong");
-                }
-            })
-        })
-
-        $("#RecordModalForm").submit(function (e) {
-            e.preventDefault();
-            var RecordId = $("#RecordId").val();
-            var stationDto = Object();
-            stationDto.Name = $("#StationName").val();
-            stationDto.CityId = $("#CityId").val();
-            if (RecordId == undefined || RecordId == null || RecordId <= 0) {
-                $.ajax({
-                    url: "station/CreateStation",
-                    type: "POST",
-                    data: stationDto,
-                    success: function () {
-                        Swal.fire(
-                            'Saved!',
-                            'Record saved successfully!',
-                            'success'
-                        );
-                        KtTable.ajax.reload();
-                        clearModalData();
-                        $("#RecordModal").modal("hide");
-                    },
-                    error: function (xhr, status, error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseText
-                        });
-                    }
-                })
-            } else {
-                stationDto.Id = parseInt(RecordId);
-                $.ajax({
-                    url: "station/UpdateStation",
-                    type: "PUT",
-                    data: stationDto,
-                    success: function () {
-                        Swal.fire(
-                            'Updated!',
-                            'Record saved updated!',
-                            'success'
-                        );
-                        KtTable.ajax.reload();
-                        clearModalData();
-                        $("#RecordModal").modal("hide");
-                    },
-                    error: function (xhr,state,error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: xhr.responseText
-                        });
-                    }
-                });
-            }
-        });
-        function clearModalData() {
-            $("#StationName").val("");
-            $("#CityId").val("");
-            $("#RecordId").val(0);
-        }
     })
     </script>
 }

@@ -10,9 +10,14 @@ namespace Quicksilver.BAL.Operations
     {
         private readonly OrderRepository orderRepository = new OrderRepository();
 
-        public List<OrderDto> GetAllOrders()
+        public List<GetAllOrders> GetAllOrders(string email)
         {
-            return orderRepository.GetAllOrders();
+            return orderRepository.GetAllOrders(email);
+        }
+
+        public void DeleteOrders(int id)
+        {
+            orderRepository.DeleteOrders(id);
         }
     }
 }

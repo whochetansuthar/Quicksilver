@@ -8,7 +8,7 @@ namespace Quicksilver.DAL.DTOs
     {
         public int Id { get; set; }
         public DateTime DateGiven { get; set; }
-        public int OrderId { get; set; }
+        public long TrackingId { get; set; }
         public double Rating { get; set; }
         public string Review { get; set; }
         public string UserName { get; set; }

@@ -1,0 +1,428 @@
+﻿@model List<Quicksilver.DAL.DTOs.CourierTypeDto>
+@{
+    ViewData["Title"] = "Book Courier";
+    Layout = "_SiteLayout";
+}
+<style>
+    .footer-heading{
+        display:none;
+    }
+    ::-webkit-input-placeholder { /* Edge */
+        color: #a6abb0 !important;
+    }
+
+    :-ms-input-placeholder { /* Internet Explorer 10-11 */
+        color: #a6abb0 !important;
+    }
+
+    ::placeholder {
+        color: #a6abb0 !important;
+    }
+</style>
+<main>
+    <!--? contact-form start -->
+    <section class="contact-form-area section-bg  pt-115 pb-120 fix" data-background="/frontend/assets/img/book_courier_bg.jpg">
+        <div class="container">
+            <div class="row justify-content-end">
+                <!-- Contact wrapper -->
+                <div class="col-xl-8 col-lg-9">
+                    <div class="contact-form-wrapper">
+                        <!-- From tittle -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Section Tittle -->
+                                <div class="section-tittle mb-50">
+                                    @*<span>Book Courier</span>*@
+                                    <h2 style="color:#ff6a00">Book Courier</h2>
+                                    <p>Book courier with pickup from your location</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- form -->
+                        <form action="#" class="contact-form" id="formSubmitCourier" autocomplete="off">
+                            <div class="row ">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" required id="rName" placeholder="Recipient Name">
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="input-form">
+                                        <input type="tel" required id="rPhone" maxlength="10" placeholder="Recipient Number">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="input-form">
+                                        <input type="text" id="rAddress" required placeholder="Recipient Address">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="rCity" autocomplete="qwwq" required placeholder="City">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="rState" required placeholder="State">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="rPIN" required placeholder="Pin">
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="select-items">
+                                        <select name="select" id="CourierType" required>
+                                            <option value="">Courier Type</option>
+                                            @foreach (var item in Model)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="number" id="Weight" required placeholder="Weight">
+                                    </div>
+                                </div>
+                                <!-- Height Width length -->
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="input-form">
+                                        <input type="text" id="Height" required placeholder="Height">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="input-form">
+                                        <input type="text" id="Width" required placeholder="Width">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                    <div class="input-form">
+                                        <input type="text" id="Length" required placeholder="length">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <div class="input-form">
+                                        <input type="text" id="sAddress" required placeholder="Your Address">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="sCity" autocomplete="eqwq" required placeholder="City">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="sState" required placeholder="State">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="sPIN" required placeholder="Pin">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-8 col-md-6">
+                                    <div class="input-form">
+                                        <input type="text" id="Coupon" placeholder="Coupon">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="input-form">
+                                        <button type="button" style="padding: 7px 50px; width: 100%; font-size: 18px; " id="btnApplyCoupon" class="genric-btn primary">Apply</button>
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="col-lg-12">
+                                    <button name="submit" class="submit-btn">Get Quote & Book</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <form asp-action="SuccessOrder" asp-controller="Transaction" id="SuccessForm">
+        <input type="hidden" id="rzOrderId" name="rzOrderId" />
+        <input type="hidden" id="rzPaymentId" name="rzPaymentId" />
+        <input type="hidden" id="rzSignature" name="rzSignature" />
+        <input type="hidden" id="rzTrackingId" name="rzTrackingId"/>
+        <input type="hidden" id="rzPaymentStatus" name="rzPaymentStatus" />
+        <input type="submit" id="btnSubmitSuccessForm" hidden />
+    </form>
+    <!-- contact-form end -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</main>
+@section scripts{
+    <script>
+        var sData = undefined;
+        var rData = undefined;
+
+        if ($("#throbber").length == 0) {
+            $("body").append("<div class='spinner-border text-warning' id='throbber' style='display:none;'></div>");
+        }
+
+        $(document).ajaxStart(function () {
+            if ($("#throbber").length == 0) {
+                $("body").append("<div class='spinner-border text-warning' id='throbber' style='display:none;'></div>");
+            }
+            $.blockUI({ message: $('#throbber') });
+        }).ajaxStop(function () {
+            $.unblockUI();
+        });
+
+        $("#formSubmitCourier").submit(function (e) {
+            e.preventDefault();
+
+            /*$.blockUI({ message: $('#throbber') });*/
+
+            var bookCourierDto = new Object();
+            bookCourierDto.recipientName = $("#rName").val();
+            bookCourierDto.rMobileNo = $("#rPhone").val();
+            bookCourierDto.rAddress = $("#rAddress").val();
+            bookCourierDto.rCity = $("#rCity").val();
+            bookCourierDto.rState = $("#rState").val();
+            bookCourierDto.rPIN = $("#rPIN").val();
+            bookCourierDto.sStationId = sData.id;
+            bookCourierDto.rStationId = rData.id;
+            bookCourierDto.CourierType = $("#CourierType").val();
+            bookCourierDto.Weight = $("#Weight").val();
+            bookCourierDto.Volume = parseFloat($("#Height").val()) * parseFloat($("#Width").val()) * parseFloat($("#Length").val());
+            bookCourierDto.sAddress = $("#sAddress").val();
+            bookCourierDto.sCity = $("#sCity").val();
+            bookCourierDto.sState = $("#sState").val();
+            bookCourierDto.sPIN = $("#sPIN").val();
+            bookCourierDto.CouponCode = $("#Coupon").val();
+            console.log(bookCourierDto);
+
+            var Estimate = new Object();
+            Estimate.SenderStationId = sData.id;
+            Estimate.RecipientStationId = rData.id;
+            Estimate.SenderAddress = bookCourierDto.sAddress + ", " + sData.city + ", " + sData.state + ", Pin:" + $("#sPIN").val();
+            Estimate.RecipientAddress = bookCourierDto.rAddress + ", " + rData.city + ", " + rData.state + ", Pin:" + $("#rPIN").val();
+            Estimate.CourierType = bookCourierDto.CourierType;
+            Estimate.Weight = bookCourierDto.Weight;
+            Estimate.Volume = bookCourierDto.Volume;
+            Estimate.CouponCode = bookCourierDto.CouponCode;
+
+            $.ajax({
+                url: "../../transaction/CalculateEstimate",
+                type: "POST",
+                data: Estimate,
+                success: function (data) {
+
+                    $.unblockUI();
+
+                    console.log(data);
+                    Swal.fire({
+                        title: 'Success',
+                        html: "Click confirm to book courier <br>" +
+                            "Initial Cost: " + data.intialCost.toFixed(2) + "<br>" +
+                            "Tax (" + data.tax + "%): " + data.taxAmount.toFixed(2) + "<br>" +
+                            "Discount (" + data.discount + "%): " + data.discountAmt.toFixed(2) + "<br>" +
+                            "Total Cost: " + data.grandTotal.toFixed(2) + "<br>",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        reverseButtons:true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        cancelButtonText:"Cancel",
+                        confirmButtonText: 'Book Courier'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.blockUI({ message: $('#throbber') });
+                            $.ajax({
+                                url: "/transaction/BookCourierByUser",
+                                method: "POST",
+                                data: bookCourierDto,
+                                success: function (data) {
+                                    console.log(data);
+                                    InitPayment(data);
+                                    $.unblockUI();
+                                },
+                                error: function (err) {
+                                    $.unblockUI();
+                                    console.log(err.responseText);
+                                    Swal.fire(
+                                        'Oops!',
+                                        err.responseText,
+                                        'error'
+                                    )
+                                }
+                            });
+                        }
+                    })
+
+
+                },
+                error: function (err) {
+                    Swal.fire(
+                        'Oops!',
+                        err.responseText,
+                        'error'
+                    );
+                    Estimate = new Object();
+                    $.unblockUI();
+                }
+            });
+        })
+
+        $("#btnApplyCoupon").click(function () {
+            if ($(this).hasClass("danger")) {
+                $(this).removeClass("danger");
+                $(this).addClass("primary");
+                $("#btnApplyCoupon").text("Apply");
+                $("#Coupon").prop("disabled", false);
+                $("#Coupon").val("");
+                return false;
+            }
+
+            var code = $("#Coupon").val();
+            if (code.trim() == "") {
+                Swal.fire(
+                    'Oops!',
+                    'Enter the coupon.',
+                    'error'
+                );
+            }
+            $.ajax({
+                url: "../../transaction/ApplyCoupon?code=" + code,
+                type: "POST",
+                success: function (data) {
+                    Swal.fire(
+                        'Hoorey!',
+                        'Coupon code applied',
+                        'success'
+                    );
+                    $("#Coupon").prop("disabled", true);
+                    $("#btnApplyCoupon").removeClass("primary");
+                    $("#btnApplyCoupon").addClass("danger");
+                    $("#btnApplyCoupon").text("Remove");
+                },
+                error: function (err) {
+                    Swal.fire(
+                        'Oops!',
+                        err.responseText,
+                        'error'
+                    );
+                }
+            })
+        });
+
+        var ReciepentAddressOption = {
+
+            url: function (phrase) {
+                return "../../agents/GetAllStationWithCityState";
+            },
+
+            getValue: function (element) {
+                return element.city;
+            },
+            list: {
+                onChooseEvent: function () {
+                    rData = $("#rCity").getSelectedItemData();
+                    $("#rState").val(rData.state);
+                    $("#rStation").val(rData.name);
+                },
+            },
+            ajaxSettings: {
+                dataType: "json",
+                method: "POST",
+                data: {
+                    dataType: "json"
+                }
+            }
+        }
+
+        var SenderAddressOption = {
+
+            url: function (phrase) {
+                return "../../agents/GetAllStationWithCityState";
+            },
+
+            getValue: function (element) {
+                return element.city;
+            },
+            list: {
+                onChooseEvent: function () {
+                    sData = $("#sCity").getSelectedItemData();
+                    $("#sState").val(sData.state);
+                    $("#sStation").val(sData.name);
+                },
+            },
+            ajaxSettings: {
+                dataType: "json",
+                method: "POST",
+                data: {
+                    dataType: "json"
+                }
+            }
+        }
+        $("#rCity").easyAutocomplete(ReciepentAddressOption);
+        $("#sCity").easyAutocomplete(SenderAddressOption);
+
+        $("input").attr("autocomplete", "dadadda");
+
+        function InitPayment(obj) {
+            var options = {
+                "key": "rzp_test_nC7llvnoGW9H5K",
+                "amount": obj.totalCost,
+                "currency": "INR",
+                "name": "Quicksilver",
+                "description": "Book Courier",
+                "image": "https://example.com/your_logo",
+                "order_id": obj.orderId,
+                "handler": function (response) {
+                    //alert(response.razorpay_payment_id);
+                    //alert(response.razorpay_order_id);
+                    //alert(response.razorpay_signature);
+                    $("#rzOrderId").val(response.razorpay_order_id);
+                    $("#rzPaymentId").val(response.razorpay_payment_id);
+                    $("#rzSignature").val(response.razorpay_signature);
+                    $("#rzTrackingId").val(obj.trackingId);
+                    $("#rzPaymentStatus").val("success");
+                    $("#btnSubmitSuccessForm").click();
+                },
+                "prefill": {
+                    "name": obj.name,
+                    "email": obj.email,
+                    "contact": obj.phone
+                },
+                "notes": {
+                    "address": obj.address
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response) {
+                //alert(response.error.code);
+                //alert(response.error.description);
+                //alert(response.error.source);
+                //alert(response.error.step);
+                //alert(response.error.reason);
+                //alert(response.error.metadata.order_id);
+                //alert(response.error.metadata.payment_id);
+                console.log(response.error);
+                $("#rzPaymentStatus").val("fail");
+                $("#btnSubmitSuccessForm").click();
+            });
+
+            rzp1.open();
+        }
+        function setAutoCompleteOff() {
+            console.log("autocompleteCalled");
+            $("#rCity").attr("autocomplete", Math.floor(Math.random() * 100000000000));
+            $("#sCity").attr("autocomplete", Math.floor(Math.random() * 100000000000));
+            $("#Coupon").attr("autocomplete", Math.floor(Math.random() * 100000000000));
+        }
+        $(document).ready(function () {
+            setInterval(setAutoCompleteOff, 10000);
+        })
+    </script>
+}

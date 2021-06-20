@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Quicksilver.BAL.Operations.Locations;
 using Quicksilver.DAL.QuicksilverDbContext;
 using System;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Quicksilver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LocationController : Controller
     {
         private readonly QuicksilverContext quicksilverDbContext;
