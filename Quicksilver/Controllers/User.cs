@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Quicksilver.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize]
     public class User : Controller
     {
         private readonly IUserOperations _userOperations;
@@ -55,6 +55,7 @@ namespace Quicksilver.Controllers
             }
         }
 
+        [Authorize(Roles ="Admin,Agent")]
         [HttpGet]
         public IActionResult GetUserByPhone(long phone)
         {

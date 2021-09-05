@@ -61,15 +61,34 @@ namespace Quicksilver.Controllers
             {
                 return BadRequest("Sorry, We are not currently this weight in that delivery type.");
             }
-            var distanceObject = await GetDistance(Estimate.SenderAddress,Estimate.RecipientAddress);
-            if (distanceObject == null || distanceObject.rows[0].elements[0].status == "ZERO_RESULTS" || distanceObject.rows[0].elements[0].status == "UNKNOWN_ERROR")
+            var distanceObject = new DistanceMatrixAiDto()
             {
-                distanceObject = await GetDistance(Estimate.SenderAddress, Estimate.RecipientAddress);
-            }
-            if (distanceObject==null || distanceObject.rows[0].elements[0].status=="ZERO_RESULTS")
-            {
-                return BadRequest("Sorry, Our system was unable to calculate the distance.");
-            }
+                rows = new List<Row>()
+                {
+                    new Row()
+                    {
+                        elements=new List<Element>()
+                        {
+                            new Element()
+                            {
+                                distance=new Distance()
+                                {
+                                    value = 50000
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            //await GetDistance(Estimate.SenderAddress,Estimate.RecipientAddress);
+            //if (distanceObject == null || distanceObject.rows[0].elements[0].status == "ZERO_RESULTS" || distanceObject.rows[0].elements[0].status == "UNKNOWN_ERROR")
+            //{
+            //    distanceObject = await GetDistance(Estimate.SenderAddress, Estimate.RecipientAddress);
+            //}
+            //if (distanceObject==null || distanceObject.rows[0].elements[0].status=="ZERO_RESULTS")
+            //{
+            //    return BadRequest("Sorry, Our system was unable to calculate the distance.");
+            //}
 
             var coupon = _commonRepository.CanApplyCoupon(Estimate.CouponCode);
             if (!string.IsNullOrEmpty(Estimate.CouponCode) && coupon==null)
@@ -102,14 +121,34 @@ namespace Quicksilver.Controllers
             DistanceMatrixAiDto distanceMatrixAiDto = null;
             try
             {
-                HttpClient client = new HttpClient();
-                var url = _configuration.GetValue<string>("DistanceMatrixAi:Url");
-                url = url.Replace("%origin%", origin).Replace("%destination%", destination);
-                var Apiresponse = await client.GetAsync(url);
-                if (Apiresponse.IsSuccessStatusCode)
+                //HttpClient client = new HttpClient();
+                //var url = _configuration.GetValue<string>("DistanceMatrixAi:Url");
+                //url = url.Replace("%origin%", origin).Replace("%destination%", destination);
+                //var Apiresponse = await client.GetAsync(url);
+                //if (Apiresponse.IsSuccessStatusCode)
+                //{
+                //    distanceMatrixAiDto = JsonConvert.DeserializeObject<DistanceMatrixAiDto>(await Apiresponse.Content.ReadAsStringAsync());
+                //}
+
+                return new DistanceMatrixAiDto()
                 {
-                    distanceMatrixAiDto = JsonConvert.DeserializeObject<DistanceMatrixAiDto>(await Apiresponse.Content.ReadAsStringAsync());
+                    rows = new List<Row>()
+                {
+                    new Row()
+                    {
+                        elements=new List<Element>()
+                        {
+                            new Element()
+                            {
+                                distance=new Distance()
+                                {
+                                    value = 50000
+                                }
+                            }
+                        }
+                    }
                 }
+                };
             }
             catch (Exception)
             {
@@ -148,11 +187,31 @@ namespace Quicksilver.Controllers
                 }
                 user = _userOperation.GetUserSingle(bookCourierDto.Phone);
             }
-            var distance = await GetDistance(bookCourierDto.sAddress,bookCourierDto.rAddress);
-            if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS")
-            {
-                return BadRequest("Sorry, Our system was unable to calculate the distance.");
-            }
+
+            var distance = new DistanceMatrixAiDto()
+                {
+                    rows = new List<Row>()
+                {
+                    new Row()
+                    {
+                        elements=new List<Element>()
+                        {
+                            new Element()
+                            {
+                                distance=new Distance()
+                                {
+                                    value = 50000
+                                }
+                            }
+                        }
+                    }
+                }
+                };
+            //var distance = await GetDistance(bookCourierDto.sAddress,bookCourierDto.rAddress);
+            //if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS")
+            //{
+            //    return BadRequest("Sorry, Our system was unable to calculate the distance.");
+            //}
             var Estimate = GetEstimate(Coupon,distance,Rate);
             var AgentId = await _userOperation.GetLoggerUser(User.Identity.Name);
             int? cid = 0;
@@ -205,19 +264,34 @@ namespace Quicksilver.Controllers
             var rAddr = OrderDetails.recipientAddress.Trim();
             var sAddr = OrderDetails.SenderAddress.Trim();
 
+            if (string.IsNullOrEmpty(OrderDetails.aEmail))
+            {
+                OrderDetails.aEmail = "support@quicksilverpost.ml";
+            }
+            if (string.IsNullOrEmpty(OrderDetails.aName))
+            {
+                OrderDetails.aName = "Chetan Suthar";
+            }
+            if (OrderDetails.aPhone==0)
+            {
+                OrderDetails.aPhone = 8561957277;
+            }
+
             uHtml = uHtml.Replace("%%AName%%", OrderDetails.aName).Replace("%%APhone%%", OrderDetails.aPhone.ToString()).Replace("%%AEmail%%", OrderDetails.aEmail)
                 .Replace("%%SPerson%%", OrderDetails.FullName).Replace("%%RPerson%%", OrderDetails.RecipientName)
                 .Replace("%%DATE%%", OrderDetails.OrderDate.Date.ToShortDateString()).Replace("%%TRNO%%", OrderDetails.TrackingId.ToString())
-                .Replace("%%DTP%%", OrderDetails.CourierType).Replace("%%Distance%%", OrderDetails.Distance.ToString())
-                .Replace("%%Weight%%", OrderDetails.Weight.ToString()).Replace("%%InitialCost%%", OrderDetails.InitialCost.ToString())
+                .Replace("%%DTP%%", OrderDetails.CourierType).Replace("%%Distance%%", OrderDetails.Distance.ToString()+" km")
+                .Replace("%%Weight%%", OrderDetails.Weight.ToString()).Replace("%%InitialCost%%", Math.Round(OrderDetails.InitialCost, 2).ToString())
                 .Replace("%%MNTH%%", CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(OrderDetails.OrderDate.Month))
                 .Replace("%%SPhone%%", OrderDetails.PhoneNumber.ToString()).Replace("%%RPhone%%", OrderDetails.RecipientMobileNo.ToString())
-                .Replace("%%IC%%", OrderDetails.InitialCost.ToString()).Replace("%%TRT%%", OrderDetails.Tax.ToString())
-                .Replace("%%DRT%%", OrderDetails.Discount.ToString()).Replace("%%GAMT%%", OrderDetails.FinalCost.ToString())
-                .Replace("%%TAMT%%", tamt.ToString()).Replace("%%DAMT%%", damt.ToString())
+                .Replace("%%IC%%", Math.Round(OrderDetails.InitialCost, 2).ToString()).Replace("%%TRT%%", Math.Round(OrderDetails.Tax, 2).ToString())
+                .Replace("%%DRT%%", Math.Round(OrderDetails.Discount, 2).ToString()).Replace("%%GAMT%%", Math.Round(OrderDetails.FinalCost, 2).ToString())
+                .Replace("%%TAMT%%", Math.Round(tamt, 2).ToString()).Replace("%%DAMT%%", Math.Round(damt, 2).ToString())
                 .Replace("%%SStreetAddress%%", sAddr).Replace("%%RStreetAddress%%", rAddr)
                 .Replace("%%SCityZipCode%%", sCity + "," + sState + "," + sPin)
-                .Replace("%%RCityZipCode%%", rCity + "," + rState + "," + rPin);
+                .Replace("%%RCityZipCode%%", rCity + "," + rState + "," + rPin)
+                .Replace("%%ItemTitle%%",OrderDetails.CourierType+" Delivery")
+                .Replace("%%ItemDescription%%","");
 
             SelectPdf.HtmlToPdf converter = new SelectPdf.HtmlToPdf();
             var pdfbyte = converter.ConvertHtmlString(uHtml);
@@ -293,14 +367,14 @@ namespace Quicksilver.Controllers
                 bookCourierDto.rAddress = bookCourierDto.rAddress + ", " + bookCourierDto.rCity + ", " + bookCourierDto.rState + ", Pin:" + bookCourierDto.rPIN;
                 var distance = await GetDistance(bookCourierDto.sAddress, bookCourierDto.rAddress);
 
-                if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS" || distance.rows[0].elements[0].status == "UNKNOWN_ERROR")
-                {
-                    distance = await GetDistance(bookCourierDto.rAddress, bookCourierDto.rAddress);
-                }
-                if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS")
-                {
-                    return BadRequest("Sorry, Our system was unable to calculate the distance.");
-                }
+                //if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS" || distance.rows[0].elements[0].status == "UNKNOWN_ERROR")
+                //{
+                //    distance = await GetDistance(bookCourierDto.rAddress, bookCourierDto.rAddress);
+                //}
+                //if (distance == null || distance.rows[0].elements[0].status == "ZERO_RESULTS")
+                //{
+                //    return BadRequest("Sorry, Our system was unable to calculate the distance.");
+                //}
 
                 var Estimate = GetEstimate(Coupon, distance, Rate);
                 var AgentId = User.IsInRole("Agent") || User.IsInRole("Admin") ? await _userOperation.GetLoggerUser(User.Identity.Name) : null;

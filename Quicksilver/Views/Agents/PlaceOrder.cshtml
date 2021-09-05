@@ -285,13 +285,6 @@
                     </tr>
                     <tr>
                         <th>
-                            Total Cost:
-                        </th>
-                        <td id="scmTotalCost">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             Expected Delivery Date:
                         </th>
                         <td id="scmEDDate">
@@ -432,7 +425,6 @@
                         //alert('success');
                         var dt = new Date(data.expectedDeliveryDate);
                         $("#scmTrackingId").text(data.trackingId);
-                        $("#scmTotalCost").text(data.totalCost);
                         $("#scmEDDate").text(dt.toLocaleDateString());
                         $("#SucessModal").modal('show');
                         $("#scmPrint").attr("href", "../../transaction/getinvoice?tid=" + data.trackingId);
