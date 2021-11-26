@@ -12,7 +12,7 @@ namespace Quicksilver.Controllers
     public class BackendController : Controller
     {
 
-        //this is test commit again
+        //this is test 
         private readonly CommonRepository commonRepository = new CommonRepository();
         public IActionResult Index()
         {
