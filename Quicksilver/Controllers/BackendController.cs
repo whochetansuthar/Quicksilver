@@ -11,6 +11,7 @@ namespace Quicksilver.Controllers
     [Authorize(Roles = "Admin,Agent")]
     public class BackendController : Controller
     {
+
         private readonly CommonRepository commonRepository = new CommonRepository();
         public IActionResult Index()
         {
